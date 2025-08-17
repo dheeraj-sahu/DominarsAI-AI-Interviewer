@@ -61,8 +61,6 @@ pip install -r requirements.txt
 SECRET_KEY=your-secret-key
 SMTP_EMAIL=your-email@gmail.com
 SMTP_PASSWORD=your-gmail-app-password
-OPR_API_KEY=your-openpagerank-key
-VT_API_KEY=your-virustotal-key
 DATABASE_URL=sqlite:///./dominarsai.db
 ```
 
