@@ -1,0 +1,58 @@
+# Environment variables
+.env
+# Database
+dominarsai.db
+# User data
+user_data/
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+
+# Virtual environments
+myenv/
+venv/
+.env/
+.envrc
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+*.sqlite3
+*.db
+
+# User data and uploads
+user_data/
+*.mp4
+*.json
+*.csv
+uploads/
+
+# Secrets and config
+*.env
+config.py
+settings.py
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# Node
+node_modules/
+
+# Misc
+*.bak
+*.swp
+*.tmp
+
+# Privacy
+OneDrive/

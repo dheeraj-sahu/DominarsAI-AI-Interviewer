@@ -1,0 +1,332 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+   body {
+    font-family: 'Poppins', sans-serif;
+    background: rgba(15, 15, 15, 0.97);
+    color: #fff;
+    padding: 30px;
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 1.8rem;
+    font-weight: 600;
+    background: linear-gradient(45deg, #00ffcc, #00ff99);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Container */
+.interview-container {
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+/* Left Panel */
+.left-panel {
+    flex: 1 1 45%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-width: 320px;
+}
+
+#question-box,
+#live-transcript-debug {
+    background: rgba(15, 15, 15, 0.97);
+    border: 2px solid rgba(0, 255, 204, 0.3);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 8px 32px rgba(0, 255, 204, 0.1);
+    backdrop-filter: blur(10px);
+    animation: glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+    from { box-shadow: 0 0 20px rgba(0, 255, 204, 0.3); }
+    to { box-shadow: 0 0 30px rgba(0, 255, 204, 0.5); }
+}
+
+#question-text {
+    font-size: 1.25rem;
+    font-weight: 400;
+    color: #fff;
+    line-height: 1.4;
+    font-style: italic;
+}
+
+#recognised-text-output {
+    color: rgba(255, 255, 255, 0.85);
+    font-style: italic;
+    white-space: pre-wrap;
+    font-size: 1rem;
+}
+
+/* Video */
+#preview {
+    flex: 1 1 45%;
+    width: 100%;
+    border-radius: 12px;
+    border: 2px solid rgba(0, 255, 204, 0.3);
+    background: #000;
+    min-width: 280px;
+    max-height: 400px;
+    object-fit: cover;
+    box-shadow: 0 8px 32px rgba(0, 255, 204, 0.1);
+}
+
+/* Buttons */
+.button-container {
+    margin-top: 25px;
+    text-align: center;
+}
+
+button {
+    padding: 12px 20px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin: 6px;
+    transition: all 0.25s ease, transform 0.1s ease;
+    font-weight: 600;
+}
+
+button:hover {
+    transform: translateY(-2px);
+}
+
+#next-question {
+    background: linear-gradient(45deg, #00ffcc, #00ff99);
+    color: #000;
+}
+
+#next-question:hover {
+    box-shadow: 0 8px 20px rgba(0, 255, 204, 0.2);
+}
+
+#finish-interview {
+    background: linear-gradient(45deg, #00ffcc, #00ff99);
+    color: #000;
+}
+
+#finish-interview:hover {
+    box-shadow: 0 8px 20px rgba(0, 255, 204, 0.2);
+}
+
+</style>
+
+
+<h2>Mock Interview – {{ job_role }}</h2>
+
+<div id="loading-spinner" style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:300px;">
+    <div style="border: 6px solid #00ffcc; border-top: 6px solid #222; border-radius: 50%; width: 48px; height: 48px; animation: spin 1s linear infinite;"></div>
+    <div style="margin-top:16px;color:#00ffcc;font-weight:600;">Loading interview questions...</div>
+</div>
+
+<div class="interview-container" style="display:none;">
+    <div class="left-panel">
+        <div id="question-box">
+            <h3 id="question-text"></h3>
+        </div>
+        <div id="live-transcript-debug">
+            <p>Recognised Text (Live):</p>
+            <p id="recognised-text-output"></p>
+        </div>
+    </div>
+
+    <video id="preview" autoplay muted></video>
+</div>
+
+<div class="button-container" style="display:none;">
+    <button id="next-question">Next Question</button>
+    <button id="finish-interview" style="display:none;">Finish Interview</button>
+</div>
+
+<style>
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+</style>
+
+
+
+
+
+
+
+
+
+
+<script>
+    let questions = null;
+    let currentIndex = 0;
+    let transcript = "";
+    let mediaRecorder;
+    let recordedChunks = [];
+    let recognition;
+    let stream;
+    let currentAnswer = "";
+    let recognitionIsManuallyStopped = false;
+
+    async function waitForQuestions() {
+        // Try to parse questions from the template context, retry if not valid
+        let tries = 0;
+        while (tries < 10) {
+            try {
+                questions = JSON.parse('{{ questions | tojson | safe }}');
+                if (Array.isArray(questions) && questions.length > 0) {
+                    break;
+                }
+            } catch (e) {
+                // Wait and retry
+            }
+            await new Promise(r => setTimeout(r, 400));
+            tries++;
+        }
+        if (!questions || !questions.length) {
+            document.getElementById("loading-spinner").innerHTML = '<div style="color:#ff4444;font-weight:600;">Failed to load interview questions. Please try again later.</div>';
+            return false;
+        }
+        return true;
+    }
+
+    document.addEventListener("DOMContentLoaded", async () => {
+        const loaded = await waitForQuestions();
+        if (!loaded) return;
+
+        document.getElementById("loading-spinner").style.display = "none";
+        document.querySelector(".interview-container").style.display = "flex";
+        document.querySelector(".button-container").style.display = "block";
+
+        stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+        document.getElementById("preview").srcObject = stream;
+
+        mediaRecorder = new MediaRecorder(stream);
+        mediaRecorder.ondataavailable = e => recordedChunks.push(e.data);
+        mediaRecorder.start();
+
+        const SpeechRecog = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SpeechRecog) {
+            alert("Speech Recognition not supported in your browser.");
+            return;
+        }
+        recognition = new SpeechRecog();
+        recognition.lang = "en-US";
+        recognition.interimResults = true;
+        recognition.continuous = true;
+
+        recognition.onresult = (event) => {
+            let interim_transcript = '';
+            for (let i = event.resultIndex; i < event.results.length; ++i) {
+                if (event.results[i].isFinal) {
+                    currentAnswer += event.results[i][0].transcript;
+                } else {
+                    interim_transcript += event.results[i][0].transcript;
+                }
+            }
+            document.getElementById('recognised-text-output').textContent = currentAnswer + interim_transcript;
+        };
+
+        recognition.onend = () => {
+            if (recognitionIsManuallyStopped) {
+                console.log("Recognition stopped manually.");
+            } else {
+                console.log("Recognition service ended, restarting...");
+                recognition.start();
+            }
+        };
+        recognition.onerror = (event) => {
+            console.error("Speech recognition error:", event.error);
+            recognitionIsManuallyStopped = true;
+        };
+
+        document.getElementById("next-question").addEventListener("click", nextQuestion);
+        document.getElementById("finish-interview").addEventListener("click", finishInterview);
+
+        speakQuestion();
+    });
+
+    function speakQuestion() {
+        if (currentIndex >= questions.length) {
+            document.getElementById("next-question").style.display = "none";
+            document.getElementById("finish-interview").style.display = "inline-block";
+            return;
+        }
+        
+        const question = questions[currentIndex];
+        document.getElementById("question-text").textContent = question;
+
+        let utterance = new SpeechSynthesisUtterance(question);
+        utterance.rate = 1;
+        utterance.pitch = 1;
+        speechSynthesis.cancel();
+        speechSynthesis.speak(utterance);
+
+        utterance.onend = () => {
+            startRecognition();
+        };
+    }
+
+    function startRecognition() {
+        // Reset the accumulated answer for the new question
+        currentAnswer = "";
+        document.getElementById("recognised-text-output").textContent = "";
+        recognitionIsManuallyStopped = false;
+        recognition.start();
+        console.log("Recognition started for question " + (currentIndex + 1));
+    }
+
+    function nextQuestion() {
+        recognitionIsManuallyStopped = true;
+        recognition.stop();
+        
+        // Final text for the question is now correctly accumulated in 'currentAnswer'
+        if (questions[currentIndex]) {
+            transcript += `Q${currentIndex+1}: ${questions[currentIndex]}\nA: ${document.getElementById('recognised-text-output').textContent}\n\n`;
+        }
+        
+        currentIndex++;
+        speakQuestion();
+    }
+
+    async function finishInterview() {
+        recognitionIsManuallyStopped = true;
+        recognition.stop();
+
+        if (questions[currentIndex]) {
+            transcript += `Q${currentIndex+1}: ${questions[currentIndex]}\nA: ${document.getElementById('recognised-text-output').textContent}\n\n`;
+        }
+        
+        mediaRecorder.stop();
+
+        mediaRecorder.onstop = async () => {
+            const videoBlob = new Blob(recordedChunks, { type: 'video/mp4' });
+
+            const formData = new FormData();
+            formData.append("video_file", videoBlob, "interview.mp4");
+            formData.append("transcript", new Blob([transcript], { type: "text/plain" }));
+            // Add job_role from template context
+            formData.append("job_role", "{{ job_role }}");
+
+            const res = await fetch("/services/save-interview", {
+                method: "POST",
+                body: formData
+            });
+
+            if (res.ok) {
+                alert("Interview saved successfully!");
+                window.location.href = "/dashboard";
+            } else {
+                alert("Error saving interview.");
+            }
+        };
+    }
+</script>
+{% endblock %}

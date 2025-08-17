@@ -1,0 +1,187 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+    body {
+        font-family: 'Poppins', sans-serif;
+        background: #000;
+        color: #fff;
+        overflow-x: hidden;
+    }
+    .animated-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle at center, #0f0f0f 0%, #070707 100%);
+        z-index: -2;
+    }
+    .animated-bg::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: 
+            radial-gradient(circle at 20% 80%, rgba(0, 255, 153, 0.1) 0%, transparent 50%),
+            radial-gradient(circle at 80% 20%, rgba(0, 255, 204, 0.1) 0%, transparent 50%);
+        animation: float 20s ease-in-out infinite;
+    }
+    @keyframes float {
+        0%, 100% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-20px) rotate(180deg); }
+    }
+    .report-detail-container {
+        
+        background: rgba(15, 15, 15, 0.97);
+        border: 2px solid rgba(0, 255, 204, 0.3);
+        border-radius: 16px;
+        padding: 40px 32px;
+        box-shadow: 0 8px 32px rgba(0, 255, 204, 0.1);
+        max-width: 700px;
+        margin: 60px auto 40px auto;
+        margin-top: 160px;
+        color: #fff;
+        position: relative;
+        z-index: 1;
+    }
+    .report-detail-title {
+        font-size: 2.2rem;
+        font-weight: 700;
+        color: #00ffcc;
+        margin-bottom: 2rem;
+        text-align: center;
+        letter-spacing: 1px;
+    }
+    .report-detail-row {
+        margin-bottom: 1.5rem;
+        font-size: 1.13rem;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+    }
+    .report-detail-label {
+        color: #00ffcc;
+        font-weight: 600;
+        margin-right: 12px;
+        min-width: 110px;
+    }
+    .report-detail-value {
+        color: #fff;
+        font-weight: 400;
+        flex: 1;
+    }
+    .report-detail-transcript {
+        background: #101c1c;
+        border-radius: 10px;
+        padding: 16px;
+        color: #fff;
+        font-size: 1.05rem;
+        margin-top: 8px;
+        white-space: pre-wrap;
+        box-shadow: 0 2px 8px rgba(0,255,204,0.08);
+    }
+    .report-detail-video {
+        width: 100%;
+        max-width: 500px;
+        border-radius: 10px;
+        margin-top: 10px;
+        box-shadow: 0 2px 8px rgba(0,255,204,0.08);
+    }
+</style>
+<div class="animated-bg"></div>
+<div class="report-detail-container">
+    <div class="report-detail-title">Interview Report</div>
+    <div class="report-detail-row"><span class="report-detail-label">Role:</span> <span class="report-detail
+    <div class="report-detail-row"><span class="report-detail-label">Date:</span> <span class="report-detail-value">{{ report.date }}</span></div>
+    <div class="report-detail-row"><span class="report-detail-label">Time:</span> <span class="report-detail-value">{{ report.time }}</span></div>
+    {% if report.interview_report and report.interview_report.overall_summary %}
+    <div class="report-detail-row" style="flex-direction:column;align-items:stretch;">
+        <span class="report-detail-label">Overall Feedback:</span>
+        <div class="report-detail-row"><span class="report-detail-label">Average Clarity:</span> <span class="report-detail-value">{{ report.interview_report.overall_summary.average_clarity }}</span></div>
+        <div class="report-detail-row"><span class="report-detail-label">Average Confidence:</span> <span class="report-detail-value">{{ report.interview_report.overall_summary.average_confidence }}</span></div>
+        <div class="report-detail-row"><span class="report-detail-label">Average Technical Knowledge:</span> <span class="report-detail-value">{{ report.interview_report.overall_summary.average_technical_knowledge }}</span></div>
+        <div class="report-detail-row"><span class="report-detail-label">Recommendation:</span> <span class="report-detail-value">{{ report.interview_report.overall_summary.recommendation }}</span></div>
+    </div>
+    {% endif %}
+
+    {% if report.interview_report and report.interview_report.evaluation %}
+    <div class="report-detail-row" style="flex-direction:column;align-items:stretch;">
+        <span class="report-detail-label">Question-wise Feedback:</span>
+        <ul>
+        {% for q in report.interview_report.evaluation %}
+            <li style="margin-bottom: 1.5em;">
+                <div><b>Q{{ loop.index }}:</b> {{ q.question }}</div>
+                <div class="report-detail-row"><span class="report-detail-label">Answer:</span> <span class="report-detail-value">{{ q.answer }}</span></div>
+                {% if q.scores %}
+                    <div class="report-detail-row"><span class="report-detail-label">Confidence:</span> <span class="report-detail-value">{{ q.scores.confidence }}</span></div>
+                    <div class="report-detail-row"><span class="report-detail-label">Clarity:</span> <span class="report-detail-value">{{ q.scores.clarity }}</span></div>
+                    <div class="report-detail-row"><span class="report-detail-label">Technical Knowledge:</span> <span class="report-detail-value">{{ q.scores.technical_knowledge }}</span></div>
+                {% elif q.evaluation %}
+                    <div class="report-detail-row"><span class="report-detail-label">Confidence:</span> <span class="report-detail-value">{{ q.evaluation.Confidence }}</span></div>
+                    <div class="report-detail-row"><span class="report-detail-label">Clarity:</span> <span class="report-detail-value">{{ q.evaluation.Clarity }}</span></div>
+                    <div class="report-detail-row"><span class="report-detail-label">Technical Knowledge:</span> <span class="report-detail-value">{{ q.evaluation['Technical Knowledge'] }}</span></div>
+                {% endif %}
+                <div class="report-detail-row"><span class="report-detail-label">Feedback:</span> <span class="report-detail-value">{{ q.feedback }}</span></div>
+            </li>
+        {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    <div class="report-detail-row" style="flex-direction:column;align-items:stretch;">
+        <span class="report-detail-label">Interview Video:</span>
+        <video id="interview-video" class="report-detail-video" controls>
+            <source src="{{ report.video_url if report.video_url else '' }}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <button id="pause-video-btn" style="margin-top:10px;">Pause</button>
+    </div>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var pauseBtn = document.getElementById('pause-video-btn');
+        var vid = document.getElementById('interview-video');
+        if(pauseBtn && vid) {
+            pauseBtn.addEventListener('click', function() {
+                vid.pause();
+            });
+        }
+    });
+    </script>
+    <div class="report-detail-row" style="flex-direction:column;align-items:stretch;">
+        <span class="report-detail-label">Proctoring Log:</span>
+        <pre class="report-detail-transcript">{{ report.proctoring_log | tojson(indent=2) }}</pre>
+    </div>
+
+    {% if performance_evaluation %}
+    <div class="report-detail-row" style="flex-direction:column;align-items:stretch;">
+        <span class="report-detail-label">Performance Evaluation:</span>
+        {% if performance_evaluation.error %}
+            <pre class="report-detail-transcript">{{ performance_evaluation.error }}</pre>
+        {% else %}
+            <div class="report-detail-row"><span class="report-detail-label">Confidence:</span> <span class="report-detail-value">{{ performance_evaluation.overall.confidence }}</span></div>
+            <div class="report-detail-row"><span class="report-detail-label">Clarity:</span> <span class="report-detail-value">{{ performance_evaluation.overall.clarity }}</span></div>
+            <div class="report-detail-row"><span class="report-detail-label">Technical Knowledge:</span> <span class="report-detail-value">{{ performance_evaluation.overall.technical_knowledge }}</span></div>
+            <div class="report-detail-row"><span class="report-detail-label">Suggestions:</span> <span class="report-detail-value">{{ performance_evaluation.overall.suggestions }}</span></div>
+            <div class="report-detail-row"><span class="report-detail-label">Summary:</span> <span class="report-detail-value">{{ performance_evaluation.overall.summary }}</span></div>
+            {% if performance_evaluation.questions %}
+            <div class="report-detail-row" style="flex-direction:column;align-items:stretch;">
+                <span class="report-detail-label">Question-wise Feedback:</span>
+                <ul>
+                {% for q in performance_evaluation.questions %}
+                    <li style="margin-bottom: 1em;">
+                        <div><b>Q{{ loop.index }}:</b> {{ q.question }}</div>
+                        <div class="report-detail-value">Confidence: {{ q.confidence }}, Clarity: {{ q.clarity }}, Technical: {{ q.technical_knowledge }}</div>
+                        <div class="report-detail-transcript">Feedback: {{ q.feedback }}</div>
+                    </li>
+                {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

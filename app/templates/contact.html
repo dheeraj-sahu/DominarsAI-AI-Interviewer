@@ -1,0 +1,269 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Poppins', sans-serif;
+        background: #000;
+        color: #fff;
+        overflow-x: hidden;
+    }
+
+    /* Animated Background */
+    .animated-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle at center, #0f0f0f 0%, #070707 100%);
+        z-index: -2;
+    }
+
+    .animated-bg::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background:
+            radial-gradient(circle at 20% 80%, rgba(0, 255, 153, 0.1) 0%, transparent 50%),
+            radial-gradient(circle at 80% 20%, rgba(0, 255, 204, 0.1) 0%, transparent 50%);
+        animation: float 20s ease-in-out infinite;
+    }
+
+    @keyframes float {
+
+        0%,
+        100% {
+            transform: translateY(0px) rotate(0deg);
+        }
+
+        50% {
+            transform: translateY(-20px) rotate(180deg);
+        }
+    }
+
+    /* Floating particles */
+    .particles {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: -1;
+    }
+
+    .particle {
+        position: absolute;
+        width: 2px;
+        height: 2px;
+        background: #00ff99;
+        border-radius: 50%;
+        animation: particleFloat 15s infinite linear;
+    }
+
+    @keyframes particleFloat {
+        0% {
+            transform: translateY(100vh) rotate(0deg);
+            opacity: 0;
+        }
+
+        10% {
+            opacity: 1;
+        }
+
+        90% {
+            opacity: 1;
+        }
+
+        100% {
+            transform: translateY(-100vh) rotate(360deg);
+            opacity: 0;
+        }
+    }
+
+    .email-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 6rem 2rem 2rem 2rem;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .email-card {
+        background: rgba(15, 15, 15, 0.97);
+        border: 3px solid rgba(0, 255, 204, 0.3);
+        border-radius: 20px;
+        padding: 3.5rem;
+        text-align: center;
+        box-shadow: 0 8px 32px rgba(0, 255, 204, 0.1);
+        max-width: 800px;
+        width: 100%;
+    }
+
+    .email-title {
+        color: #00ffcc;
+        font-size: 3rem;
+        margin-bottom: 1.8rem;
+        font-weight: 600;
+    }
+
+    .contact-description {
+        color: #ffffff;
+        font-size: 1.3rem;
+        margin-bottom: 2.5rem;
+        line-height: 1.6;
+        opacity: 0.9;
+    }
+
+    .team-section {
+        margin: 2rem 0;
+        padding: 2rem;
+        background: rgba(0, 255, 204, 0.05);
+        border-radius: 15px;
+    }
+
+    .team-member {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 1.5rem 0;
+        padding: 1.5rem;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 10px;
+        transition: transform 0.3s ease;
+    }
+
+    .team-member:hover {
+        transform: translateY(-5px);
+    }
+
+    .member-info {
+        text-align: left;
+        margin-left: 1rem;
+    }
+
+    .member-name {
+        color: #00ffcc;
+        font-size: 1.5rem;
+        margin-bottom: 0.8rem;
+    }
+
+    .email-address {
+        color: #fff;
+        font-size: 1.2rem;
+        margin: 0.3rem 0;
+        display: flex;
+        align-items: center;
+    }
+
+    .social-links {
+        margin-top: 1.5rem;
+        display: flex;
+        justify-content: flex-start;
+        gap: 1.5rem;
+    }
+
+    .social-link {
+        color: #00ffcc;
+        font-size: 1.8rem;
+        transition: transform 0.3s ease, color 0.3s ease;
+    }
+
+    .social-link:hover {
+        transform: translateY(-3px);
+        color: #fff;
+    }
+
+    .icon {
+        margin-right: 0.8rem;
+        color: #00ffcc;
+        font-size: 1.2rem;
+    }
+</style>
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<div class="email-container">
+    <div class="email-card">
+        <h1 class="email-title">Get in Touch</h1>
+        <p class="contact-description">
+            Have questions about DominarsAI? Learn more about DominarsAI and get the information you need.
+        </p>
+
+        <div class="team-section">
+            <div class="team-member">
+                <div class="member-info">
+                    <h3 class="member-name">Dheeraj Kumar</h3>
+                    <p class="email-address">
+                        <i class="fas fa-envelope icon"></i>
+                        dheerajroot01@gmail.com
+                    </p>
+                    <div class="social-links">
+                        <a href="https://github.com/dheerajroot01" target="_blank" class="social-link">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/in/dheerajsahu/" target="_blank" class="social-link">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="team-member">
+                <div class="member-info">
+                    <h3 class="member-name">Daksh Verma</h3>
+                    <p class="email-address">
+                        <i class="fas fa-envelope icon"></i>
+                        daksh11verma@gmail.com
+                    </p>
+                    <div class="social-links">
+                        <a href="https://github.com/dheerajroot01" target="_blank" class="social-link">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/in/dheerajsahu/" target="_blank" class="social-link">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="team-member">
+                <div class="member-info">
+                    <h3 class="member-name">Ishita Gupta</h3>
+                    <p class="email-address">
+                        <i class="fas fa-envelope icon"></i>
+                        ishita@gmail.com
+                    </p>
+                    <div class="social-links">
+                        <a href="https://github.com/dheerajroot01" target="_blank" class="social-link">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/in/dheerajsahu/" target="_blank" class="social-link">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+{% endblock %}

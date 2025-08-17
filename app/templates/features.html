@@ -1,0 +1,373 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Poppins', sans-serif;
+        background: #000;
+        color: #fff;
+        line-height: 1.6;
+    }
+
+    /* Animated Background - matching index.html */
+    .animated-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle at center, #0f0f0f 0%, #070707 100%);
+        z-index: -2;
+    }
+
+    .animated-bg::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: 
+            radial-gradient(circle at 20% 80%, rgba(0, 255, 153, 0.1) 0%, transparent 50%),
+            radial-gradient(circle at 80% 20%, rgba(0, 255, 204, 0.1) 0%, transparent 50%);
+        animation: float 20s ease-in-out infinite;
+    }
+
+    .page-header {
+        text-align: center;
+        padding: 6rem 2rem 4rem;
+        background: rgba(0, 0, 0, 0.7);
+    }
+
+    .page-header h1 {
+        font-size: 3.5rem;
+        margin-bottom: 1.5rem;
+        background: linear-gradient(45deg, #00ff99, #00ffcc);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: glow 3s ease-in-out infinite alternate;
+    }
+
+    .page-header p {
+        font-size: 1.25rem;
+        color: #ccc;
+        max-width: 900px;
+        margin: 0 auto;
+        line-height: 1.7;
+    }
+
+    /* Model Feature Sections */
+    .model-section {
+        padding: 4rem 2rem;
+        margin: 2rem auto;
+        max-width: 1400px;
+    }
+
+    .model-header {
+        text-align: center;
+        margin-bottom: 3rem;
+        padding: 2rem;
+        background: rgba(15, 15, 15, 0.97);
+        border: 6px solid rgba(0, 255, 204, 0.3);
+        border-radius: 20px;
+        backdrop-filter: blur(10px);
+    }
+
+    .model-header h2 {
+        font-size: 2.5rem;
+        color: #00ffcc;
+        margin-bottom: 1.2rem;
+    }
+
+    .model-header p {
+        color: #ccc;
+        font-size: 1.25rem;
+        line-height: 1.7;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .feature-groups {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-top: 2rem;
+    }
+
+    .feature-group {
+        background: rgba(15, 15, 15, 0.97);
+        border: 4px solid rgba(0, 255, 204, 0.3);
+        border-radius: 15px;
+        padding: 2.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .feature-group:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0, 255, 153, 0.2);
+    }
+
+    .feature-group h3 {
+        font-size: 2rem;
+        color: #00ff99;
+        margin-bottom: 1.8rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .feature-group h3 i {
+        font-size: 2.2rem;
+    }
+
+    .feature-list {
+        list-style: none;
+    }
+
+    .feature-list li {
+        margin-bottom: 1.2rem;
+        padding-left: 2rem;
+        position: relative;
+        color: #ccc;
+        font-size: 1.25rem;
+        line-height: 1.7;
+    }
+
+    .feature-list li::before {
+        content: '→';
+        position: absolute;
+        left: 0;
+        color: #00ff99;
+    }
+
+    .highlight-box {
+        background: rgba(0, 255, 153, 0.1);
+        border-left: 4px solid #00ff99;
+        padding: 1.5rem;
+        margin: 2rem 0;
+        border-radius: 0 10px 10px 0;
+    }
+
+    .highlight-box h4 {
+        color: #00ffcc;
+        margin-bottom: 1rem;
+        font-size: 1.4rem;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .page-header h1 {
+            font-size: 2.5rem;
+        }
+
+        .model-header h2 {
+            font-size: 2rem;
+        }
+
+        .feature-group h3 {
+            font-size: 1.5rem;
+        }
+
+        .feature-list li {
+            font-size: 1rem;
+        }
+    }
+</style>
+
+<div class="animated-bg"></div>
+
+<header class="page-header">
+    <h1>Advanced AI Interviewer Features</h1>
+    <p>Explore our AI-powered modules that bring realistic, secure, and insightful interview simulations to every candidate</p>
+</header>
+
+<!-- Resume & Role Analysis -->
+<section class="model-section">
+    <div class="model-header">
+        <h2>Resume & Role Analysis</h2>
+        <p>Personalized question generation and context awareness based on candidate input</p>
+    </div>
+    
+    <div class="feature-groups">
+        <div class="feature-group">
+            <h3><i class="fas fa-file-alt"></i> Resume Parsing</h3>
+            <ul class="feature-list">
+                <li>Extracts skills, experience, and education details</li>
+                <li>Identifies relevant domains and topics</li>
+                <li>Maps experience level for question difficulty</li>
+            </ul>
+        </div>
+
+        <div class="feature-group">
+            <h3><i class="fas fa-user-tag"></i> Role-Specific Context</h3>
+            <ul class="feature-list">
+                <li>Aligns questions to target job role</li>
+                <li>Ensures industry-relevant technical queries</li>
+                <li>Adapts follow-up questions dynamically</li>
+            </ul>
+        </div>
+
+        <div class="feature-group">
+            <h3><i class="fas fa-lightbulb"></i> Question Generation</h3>
+            <ul class="feature-list">
+                <li>Powered by LLMs for varied difficulty</li>
+                <li>Balanced mix of behavioral and technical questions</li>
+                <li>Continuous update to reflect industry trends</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- Cheating Detection & Integrity -->
+<section class="model-section">
+    <div class="model-header">
+        <h2>Cheating Detection & Integrity</h2>
+        <p>Real-time monitoring to ensure interview authenticity</p>
+    </div>
+    
+    <div class="feature-groups">
+        <div class="feature-group">
+            <h3><i class="fas fa-eye"></i> Eye & Head Tracking</h3>
+            <ul class="feature-list">
+                <li>Detects prolonged off-screen glances</li>
+                <li>Identifies head movement patterns</li>
+                <li>Flags possible note reading</li>
+            </ul>
+        </div>
+
+        <div class="feature-group">
+            <h3><i class="fas fa-user-friends"></i> Multi-Face Detection</h3>
+            <ul class="feature-list">
+                <li>Detects additional people in frame</li>
+                <li>Blocks external assistance attempts</li>
+                <li>Captures timestamped evidence clips</li>
+            </ul>
+        </div>
+
+        <div class="feature-group">
+            <h3><i class="fas fa-mobile-alt"></i> Unauthorized Device Detection</h3>
+            <ul class="feature-list">
+                <li>Monitors for phones, tablets, or screens</li>
+                <li>Flags suspicious device presence</li>
+                <li>Logs visual evidence for audit</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="highlight-box">
+        <h4>Integrity-First Design</h4>
+        <ul class="feature-list">
+            <li>Real-time flagging with human review option</li>
+            <li>Zero-tolerance policy for verified cheating</li>
+            <li>Transparency through stored audit logs</li>
+        </ul>
+    </div>
+</section>
+
+<!-- Audio & Speech Analysis -->
+<section class="model-section">
+    <div class="model-header">
+        <h2>Audio & Speech Analysis</h2>
+        <p>Advanced voice processing for communication and delivery scoring</p>
+    </div>
+    
+    <div class="feature-groups">
+        <div class="feature-group">
+            <h3><i class="fas fa-microphone"></i> Voice Feature Extraction</h3>
+            <ul class="feature-list">
+                <li>Pitch, pace, and volume measurement</li>
+                <li>Detection of monotone or nervous speech</li>
+                <li>MFCC-based acoustic profiling</li>
+            </ul>
+        </div>
+
+        <div class="feature-group">
+            <h3><i class="fas fa-keyboard"></i> Speech-to-Text</h3>
+            <ul class="feature-list">
+                <li>Whisper AI transcription for accuracy</li>
+                <li>Handles varied accents and noise conditions</li>
+                <li>Generates precise text for analysis</li>
+            </ul>
+        </div>
+
+        <div class="feature-group">
+            <h3><i class="fas fa-comment-dots"></i> Delivery Assessment</h3>
+            <ul class="feature-list">
+                <li>Filler word detection (“um”, “ah”)</li>
+                <li>Measures speech clarity and flow</li>
+                <li>Confidence scoring based on vocal dynamics</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- Content Relevance & Scoring -->
+<section class="model-section">
+    <div class="model-header">
+        <h2>Content Relevance & Scoring</h2>
+        <p>LLM-powered evaluation for accurate, role-specific scoring</p>
+    </div>
+    
+    <div class="feature-groups">
+        <div class="feature-group">
+            <h3><i class="fas fa-tasks"></i> Semantic Scoring</h3>
+            <ul class="feature-list">
+                <li>Compares answers to domain expectations</li>
+                <li>Rates technical accuracy</li>
+                <li>Identifies off-topic responses</li>
+            </ul>
+        </div>
+
+        <div class="feature-group">
+            <h3><i class="fas fa-check-double"></i> Strength & Weakness Analysis</h3>
+            <ul class="feature-list">
+                <li>Highlights well-structured answers</li>
+                <li>Flags gaps in clarity or depth</li>
+                <li>Suggests concrete improvements</li>
+            </ul>
+        </div>
+
+        <div class="feature-group">
+            <h3><i class="fas fa-file-download"></i> Feedback Reports</h3>
+            <ul class="feature-list">
+                <li>Full transcript with per-question scores</li>
+                <li>Visual performance graphs</li>
+                <li>Downloadable PDF or dashboard view</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+
+<script>
+    // Add animation to feature groups on scroll
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, observerOptions);
+
+    document.querySelectorAll('.feature-group').forEach(group => {
+        group.style.opacity = '0';
+        group.style.transform = 'translateY(20px)';
+        group.style.transition = 'all 0.6s ease-out';
+        observer.observe(group);
+    });
+</script>
+
+{% endblock %}

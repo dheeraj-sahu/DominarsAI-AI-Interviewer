@@ -1,0 +1,754 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+    body {
+        font-family: 'Poppins', sans-serif;
+        background: #000;
+        color: #fff;
+        overflow-x: hidden;
+        scroll-behavior: smooth;
+    }
+
+    /* Animated Background */
+    .animated-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle at center, #0f0f0f 0%, #070707 100%);
+        z-index: -2;
+    }
+
+    .animated-bg::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background:
+            radial-gradient(circle at 20% 80%, rgba(0, 255, 153, 0.1) 0%, transparent 50%),
+            radial-gradient(circle at 80% 20%, rgba(0, 255, 204, 0.1) 0%, transparent 50%);
+        animation: float 20s ease-in-out infinite;
+    }
+
+    @keyframes float {
+
+        0%,
+        100% {
+            transform: translateY(0px) rotate(0deg);
+        }
+
+        50% {
+            transform: translateY(-20px) rotate(180deg);
+        }
+    }
+
+    /* Floating particles */
+    .particles {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: -1;
+    }
+
+    .particle {
+        position: absolute;
+        width: 2px;
+        height: 2px;
+        background: #00ff99;
+        border-radius: 50%;
+        animation: particleFloat 15s infinite linear;
+    }
+
+    @keyframes particleFloat {
+        0% {
+            transform: translateY(100vh) rotate(0deg);
+            opacity: 0;
+        }
+
+        10% {
+            opacity: 1;
+        }
+
+        90% {
+            opacity: 1;
+        }
+
+        100% {
+            transform: translateY(-100vh) rotate(360deg);
+            opacity: 0;
+        }
+    }
+
+    /* Hero Section */
+    .hero {
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-content {
+        max-width: 800px;
+        padding: 0 2rem;
+        z-index: 1;
+    }
+
+    .hero h1 {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+        background: linear-gradient(45deg, #00ff99, #00ffcc);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: glow 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes glow {
+        from {
+            text-shadow: 0 0 20px #00ff99;
+        }
+
+        to {
+            text-shadow: 0 0 30px #00ffcc, 0 0 40px #00ff99;
+        }
+    }
+
+    .hero p {
+        font-size: 1.5rem;
+        color: #ccc;
+        margin-bottom: 2rem;
+        line-height: 1.6;
+    }
+
+    .cta-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 1rem 2rem;
+        border-radius: 25px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn.primary {
+        background: linear-gradient(45deg, #00ff99, #00ffcc);
+        color: #000;
+    }
+
+    .btn.secondary {
+        border: 2px solid #00ff99;
+        color: #00ff99;
+        background: transparent;
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 255, 153, 0.4);
+    }
+
+    /* Stats Section */
+    .stats {
+        padding: 4rem 2rem;
+        background: rgba(10, 10, 10, 0.8);
+        border-top: 1px solid rgba(0, 255, 153, 0.2);
+    }
+
+    .stats-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+    }
+
+    .stat-card {
+        text-align: center;
+        padding: 3rem;
+        background: rgba(15, 15, 15, 0.97);
+        border: 6px solid rgba(0, 255, 204, 0.3);
+        border-radius: 20px;
+        transition: all 0.4s ease;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 8px 32px rgba(0, 255, 204, 0.1);
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .stat-number {
+        font-size: 3rem;
+        font-weight: bold;
+        color: #00ff99;
+        display: block;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+        color: #ccc;
+        font-size: 1.1rem;
+    }
+
+    /* Features Section */
+    .features {
+        padding: 6rem 2rem;
+        background: rgba(10, 10, 10, 0.5);
+    }
+
+    .features-container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .section-header {
+        text-align: center;
+        margin-bottom: 4rem;
+    }
+
+    .section-header h2 {
+        font-family: 'Poppins', sans-serif;
+        font-size: 3.5rem;
+        color: #00ff99;
+        margin-bottom: 1.5rem;
+        background: linear-gradient(45deg, #00ff99, #00ffcc);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-weight: 600;
+    }
+
+    .section-header p {
+        font-size: 1.2rem;
+        color: #ccc;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .features-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 3rem;
+        justify-content: center;
+        max-width: 1600px;
+        margin: 0 auto;
+    }
+
+    .features-grid .feature-card {
+        flex: 0 1 calc(33.33% - 2rem);
+        min-width: 120px;
+    }
+
+    .features-grid .feature-card:nth-child(4),
+    .features-grid .feature-card:nth-child(5) {
+        flex: 0 1 calc(33.33% - 2rem);
+    }
+
+    .feature-card {
+        background: rgba(15, 15, 15, 0.97);
+        border: 6px solid rgba(0, 255, 204, 0.3);
+        min-width: 520px;
+        border-radius: 20px;
+        padding: 3rem;
+        text-align: center;
+        transition: all 0.4s ease;
+        position: relative;
+        overflow: hidden;
+        backdrop-filter: blur(10px);
+    }
+
+    .feature-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(0, 255, 153, 0.1), transparent);
+        transition: left 0.6s;
+    }
+
+    .feature-card:hover::before {
+        left: 100%;
+    }
+
+    .feature-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 10px 40px rgba(0, 255, 153, 0.4);
+    }
+
+    .feature-icon {
+        font-size: 4rem;
+        color: #00ff99;
+        margin-bottom: 1.5rem;
+        transition: transform 0.3s ease;
+        display: inline-block;
+    }
+
+    .feature-card:hover .feature-icon {
+        transform: scale(1.1) rotate(5deg);
+    }
+
+    .feature-card h3 {
+        font-family: 'Poppins', sans-serif;
+        font-size: 2rem;
+        color: #00ffcc;
+        margin-bottom: 1.2rem;
+        font-weight: 600;
+    }
+
+    .feature-card p {
+        color: #ccc;
+        line-height: 1.7;
+        font-size: 1.1rem;
+    }
+
+    /* How It Works Section */
+    .how-it-works {
+        padding: 6rem 2rem;
+        background: rgba(10, 10, 10, 0.5);
+    }
+
+    .process-steps {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+        margin-top: 3rem;
+    }
+
+    .step {
+        text-align: center;
+        position: relative;
+    }
+
+    .step-number {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(45deg, #00ff99, #00ffcc);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #000;
+        margin: 0 auto 1rem;
+    }
+
+    .step h3 {
+        color: #00ffcc;
+        margin-bottom: 1rem;
+    }
+
+    .step p {
+        color: #ccc;
+        line-height: 1.6;
+    }
+
+    /* Architecture Section */
+    .architecture {
+        padding: 6rem 2rem;
+    }
+
+    .architecture-layers {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        margin: 3rem auto 0;
+        max-width: 2000px;
+        padding: 0 2rem;
+    }
+
+    .layer-card {
+        background: rgba(15, 15, 15, 0.97);
+        border: 6px solid rgba(0, 255, 204, 0.3);
+        padding: 3rem;
+        border-radius: 20px;
+        flex: 1;
+        min-width: 450px;
+        position: relative;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 8px 32px rgba(0, 255, 204, 0.1);
+        transition: all 0.4s ease;
+    }
+
+    .layer-card h3 {
+        color: #00ffcc;
+        margin-bottom: 1.2rem;
+        font-size: 1.8rem;
+        font-weight: 600;
+    }
+
+    .layer-card p {
+        color: #ccc;
+        line-height: 1.7;
+        margin-bottom: 1.5rem;
+        font-size: 1.2rem;
+    }
+
+    .layer-card ul {
+        list-style: none;
+        padding-left: 0;
+    }
+
+    .layer-card li {
+        color: #ccc;
+        margin-bottom: 1rem;
+        padding-left: 1.8rem;
+        position: relative;
+        font-size: 1.15rem;
+        line-height: 1.7;
+    }
+
+    .layer-card li::before {
+        content: '✓';
+        position: absolute;
+        left: 0;
+        color: #00ff99;
+        font-weight: bold;
+    }
+
+
+    /* Footer */
+    footer {
+        background: rgba(5, 5, 5, 0.9);
+        padding: 3rem 2rem 1rem;
+        border-top: 1px solid rgba(0, 255, 153, 0.2);
+    }
+
+    .footer-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+    }
+
+    .footer-section h3 {
+        color: #00ff99;
+        margin-bottom: 1rem;
+    }
+
+    .footer-section p,
+    .footer-section a {
+        color: #ccc;
+        text-decoration: none;
+        line-height: 1.8;
+        font-size: 1.15rem;
+    }
+
+    .footer-section a:hover {
+        color: #00ff99;
+    }
+
+    .footer-bottom {
+        font-size: 1.15rem;
+        text-align: center;
+        margin-top: 0.7rem;
+        padding-top: 2rem;
+        border-top: 1px solid rgba(0, 255, 153, 0.2);
+        color: #666;
+    }
+
+
+    /* Responsive Design */
+    @media (max-width: 1400px) {
+        .architecture-layers {
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .layer-card {
+            min-width: 400px;
+            max-width: 480px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .hero h1 {
+            font-size: 2.5rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+        }
+
+        .cta-buttons {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .section-header h2 {
+            font-size: 2rem;
+        }
+    }
+</style>
+
+<div class="animated-bg"></div>
+<div class="particles"></div>
+
+
+
+<!-- Hero Section -->
+<section id="home" class="hero">
+    <div class="hero-content">
+        <h1>Ace Any Job Interview with DominarsAI</h1>
+        <p>
+           Transforming interviews with AI — tailored questions, instant feedback, cheating detection, and anytime practice to empower candidates and streamline hiring.
+        </p>
+        <div class="cta-buttons">
+            <a href="#features" class="btn primary">Explore Features</a>
+            <a href="#architecture" class="btn secondary">Learn More</a>
+        </div>
+    </div>
+</section>
+
+<!-- Stats Section -->
+<section class="stats">
+    <div class="stats-container">
+        <div class="stat-card">
+            <span class="stat-number">24 FPS</span>
+            <span class="stat-label">Smooth Video Capture</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-number">3+</span>
+            <span class="stat-label">AI Modules Integrated</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-number">100%</span>
+            <span class="stat-label">Integrity-Focused Design</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-number">Anytime</span>
+            <span class="stat-label">Asynchronous Practice</span>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section id="features" class="features">
+    <div class="features-container">
+        <div class="section-header">
+            <h2>AI Interviewer – Key Features</h2>
+            <p>Empowering students with realistic practice and empowering recruiters with fair, efficient assessments</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">📝</div>
+                <h3>Tailored Question Generation</h3>
+                <p>Upload a resume or select a target role; the AI uses this context to craft role-specific interview
+                    questions dynamically.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📅</div>
+                <h3>Flexible Scheduling</h3>
+                <p>Asynchronous interviews allow candidates to practice anytime, anywhere without the stress of fixed
+                    schedules.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💬</div>
+                <h3>Comprehensive AI Feedback</h3>
+                <p>Analyzes speech, audio, and delivery to score communication, technical accuracy, and confidence, while
+                    offering tips for improvement.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">👀</div>
+                <h3>Cheating Detection</h3>
+                <p>Real-time monitoring of eye movement, extra faces, and unauthorized devices ensures interview integrity.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>Detailed Reports</h3>
+                <p>Personalized dashboards with transcripts, metrics, flagged incidents, and improved sample answers.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section id="how-it-works" class="how-it-works">
+    <div class="features-container">
+        <div class="section-header">
+            <h2>How DominarsAI Works</h2>
+            <p>Seamlessly combining computer vision, NLP, and asynchronous design for realistic interview simulations</p>
+        </div>
+        <div class="process-steps">
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3>Resume & Role Input</h3>
+                <p>Candidate uploads a resume or selects a target role to guide question generation.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <h3>Recording Session</h3>
+                <p>WebRTC captures 24 FPS video and audio while OpenCV tracks eyes and faces for integrity.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <h3>AI Analysis</h3>
+                <p>Speech-to-text via Whisper, content relevance scoring, vocal delivery analysis, and cheating detection.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">4</div>
+                <h3>Feedback & Reporting</h3>
+                <p>Candidate receives a scored report with improvement tips, flagged events, and sample answers.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Architecture Section -->
+<section id="architecture" class="architecture">
+    <div class="features-container">
+        <div class="section-header">
+            <h2>Modular AI Architecture</h2>
+            <p>Scalable, plug-and-play ML components ensuring performance, flexibility, and accuracy</p>
+        </div>
+        <div class="architecture-layers">
+            <div class="layer-card">
+                <h3>Computer Vision Module</h3>
+                <p>Ensures interview integrity through real-time monitoring.</p>
+                <ul>
+                    <li>Eye movement & head direction tracking</li>
+                    <li>Multiple face & device detection</li>
+                    <li>Suspicious behavior flagging</li>
+                    <li>Video logging for audit</li>
+                </ul>
+            </div>
+            <div class="layer-card">
+                <h3>Speech & Audio Analysis</h3>
+                <p>Evaluates delivery and clarity while detecting filler words.</p>
+                <ul>
+                    <li>Pitch, pace, and volume analysis</li>
+                    <li>Whisper transcription</li>
+                    <li>Filler word count</li>
+                    <li>Confidence scoring</li>
+                </ul>
+            </div>
+            <div class="layer-card">
+                <h3>Content Relevance Engine</h3>
+                <p>Checks answer quality against domain expectations.</p>
+                <ul>
+                    <li>LLM-based semantic scoring</li>
+                    <li>Sample improved answers</li>
+                    <li>Role-specific evaluation</li>
+                    <li>Continuous learning from user data</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer>
+    <div class="footer-content">
+        <div class="footer-section">
+            <h3>DominarsAI</h3>
+            <p>AI-Powered Virtual Interviewer developed by Team NITDominars to bridge the gap between interview
+                preparation and hiring needs.</p>
+        </div>
+        <div class="footer-section">
+            <h3>Team</h3>
+            <p>Daksh Verma<br>Dheeraj Kumar<br>Ishita Gupta<br>NIT Delhi</p>
+        </div>
+        <div class="footer-section">
+            <h3>Technology Stack</h3>
+            <p>OpenCV<br>Whisper<br>LLMs (GPT / Gemini)<br>WebRTC + FastAPI</p>
+        </div>
+        <div class="footer-section">
+            <h3>Contact</h3>
+            <p>dheerajsahu9943@gmail.com<br>daksh11verma@gmail.com</p>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>&copy; 2025 DominarsAI - NIT Delhi. AI-Powered Interview Preparation & Assessment.</p>
+    </div>
+</footer>
+
+<script>
+    // Create floating particles
+    function createParticle() {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.animationDelay = Math.random() * 15 + 's';
+        particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+        document.querySelector('.particles').appendChild(particle);
+
+        setTimeout(() => {
+            particle.remove();
+        }, 25000);
+    }
+
+    // Create particles periodically
+    setInterval(createParticle, 300);
+
+    // Smooth scrolling for navigation links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+
+    // Animate stats when they come into view
+    const observerOptions = {
+        threshold: 0.5,
+        rootMargin: '0px 0px -100px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.animationPlayState = 'running';
+            }
+        });
+    }, observerOptions);
+
+    document.querySelectorAll('.stat-card, .feature-card').forEach(card => {
+        observer.observe(card);
+    });
+
+    // Add navbar background on scroll
+    window.addEventListener('scroll', () => {
+        const nav = document.querySelector('.navbar');
+        if (nav && window.scrollY > 50) {
+            nav.style.background = 'rgba(13, 17, 23, 0.95)';
+        } else if (nav) {
+            nav.style.background = 'rgba(13, 17, 23, 0.9)';
+        }
+    });
+</script>
+
+{% endblock %}
