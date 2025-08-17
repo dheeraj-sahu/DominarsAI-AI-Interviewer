@@ -1,8 +1,8 @@
 import os
 import requests
 
-GEMINI_API_KEY = "AIzaSyA2rMfuyCrYhoeMYUXu7na4yCLKa-_7I2Q"
-GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent"
+GEMINI_API_KEY = ""
+GEMINI_API_URL = ""
 
 
 def generate_interview_questions(resume_text: str, job_role: str, num_questions: int = 8, return_raw: bool = False):
